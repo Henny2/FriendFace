@@ -15,14 +15,17 @@ struct ContentView: View {
     @State private var users = [User]()
     var numbers = [1,2,3,4]
     var body: some View {
-        VStack {
-            List(users, id: \.id) { user in
-                VStack{
-                    Text(user.name)
-                    Text(user.registered.formatted())
+        NavigationStack {
+            VStack {
+                List(users, id: \.id) { user in
+                    VStack{
+                        NavigationLink(user.name){
+                            Color.red
+                        }
+                    }
                 }
+                Text(String(users.count))
             }
-            Text(String(users.count))
         }
         .padding()
         .task {
@@ -31,6 +34,7 @@ struct ContentView: View {
     }
     
     func loadData () async {
+        if(users.count > 0 ) { return }
         // step 1: creating the URL we want to read from
         guard let url = URL(string: "https://www.hackingwithswift.com/samples/friendface.json") else {
             print("Invalid URL")
@@ -46,7 +50,7 @@ struct ContentView: View {
                 let decoder = JSONDecoder()
                 decoder.dateDecodingStrategy = .iso8601 // making sure the date properties are decoded correctly
                 let decodedData = try decoder.decode([User].self, from: data)
-                print(decodedData)
+//                print(decodedData)
                 users = decodedData
                 print(users[0].friends)
             } catch {
