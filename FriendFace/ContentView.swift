@@ -19,13 +19,25 @@ struct ContentView: View {
             VStack {
                 List(users, id: \.id) { user in
                     VStack{
-                        NavigationLink(user.name){
-                            Color.red
+                        NavigationLink{
+                            UserView(user: user)
+                        } label: {
+                            VStack{
+                                HStack {
+                                    Text(user.name).font(.headline)
+                                    Spacer()
+                                    Text(user.isActive ? "online" : "offline").fontDesign(.default).fontWeight(.light)
+                                }
+                                HStack{
+                                    Text(user.company)
+                                    Spacer()
+                                }
+                            }
                         }
                     }
                 }
-                Text(String(users.count))
-            }
+            }.navigationTitle("Friends")
+                .scrollContentBackground(.hidden)
         }
         .padding()
         .task {
